@@ -14,7 +14,13 @@ cargo install expand-mod
 ## Usage
 
 ```sh
-expand-mod path_to_src/lib.rs
+expand-mod path_to_src/lib.rs > path_to_output.rs
+```
+
+or
+
+```sh
+expand-mod path_to_src/lib.rs --clipbaord
 ```
 
 ## Command line options
