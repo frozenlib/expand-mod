@@ -84,10 +84,14 @@ fn expand_from_text(path: &Path, is_root: bool, s: &str) -> Result<String> {
     for part in b.finish(s.len()) {
         match part {
             Part::Text(r) => text.push_str(&s[r]),
-            Part::Mod(m) => text.push_str(&expand_from_path(
-                &path_from_mod(path, is_root, &m)?,
-                false,
-            )?),
+            Part::Mod(m) => {
+                text.push_str(" {\n");
+                text.push_str(&expand_from_path(
+                    &path_from_mod(path, is_root, &m)?,
+                    false,
+                )?);
+                text.push_str("}\n");
+            }
         }
     }
     Ok(text)
