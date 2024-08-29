@@ -71,11 +71,18 @@ fn with_source<T>(r: Result<T>, path: &Path, text: &str) -> Result<T> {
     })
 }
 
-pub fn expand_from_path(path: &Path, is_root: bool) -> Result<String> {
+pub fn expand_from_path(root: &Path, path: &Path, is_root: bool) -> Result<String> {
+    if path.canonicalize()?.strip_prefix(root).is_err() {
+        return Err(ExpandError::new(
+            None,
+            anyhow!("path is out of root directory : `{}`", path.display()),
+        ));
+    }
+
     let s = with_path(fs::read_to_string(path), path)?;
-    with_source(expand_from_text(path, is_root, &s), path, &s)
+    with_source(expand_from_text(root, path, is_root, &s), path, &s)
 }
-fn expand_from_text(path: &Path, is_root: bool, s: &str) -> Result<String> {
+fn expand_from_text(root: &Path, path: &Path, is_root: bool, s: &str) -> Result<String> {
     let tokens = parse_token_stream(s)?;
     let file: File = parse2(tokens)?;
     let mut b = CodeBuilder::new();
@@ -87,6 +94,7 @@ fn expand_from_text(path: &Path, is_root: bool, s: &str) -> Result<String> {
             Part::Mod(m) => {
                 text.push_str(" {\n");
                 text.push_str(&expand_from_path(
+                    root,
                     &path_from_mod(path, is_root, &m)?,
                     false,
                 )?);

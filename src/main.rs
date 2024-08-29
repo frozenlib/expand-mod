@@ -25,7 +25,8 @@ fn run() -> Result<(), ExpandError> {
     let args = Args::parse();
     let mut text = String::new();
     for file in &args.files {
-        text.push_str(&expand_from_path(file, true)?);
+        let root = file.canonicalize()?.parent().unwrap().to_path_buf();
+        text.push_str(&expand_from_path(&root, file, true)?);
     }
     if args.clipboard {
         arboard::Clipboard::new()?.set_text(text)?;
