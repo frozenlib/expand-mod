@@ -1,6 +1,15 @@
-use std::{path::Path, process::ExitCode};
+use std::{path::PathBuf, process::ExitCode};
 
+use clap::Parser;
 use expand_mod::{expand_from_path, ExpandError};
+
+#[derive(clap::Parser)]
+struct Args {
+    #[clap(long)]
+    clipboard: bool,
+
+    files: Vec<PathBuf>,
+}
 
 fn main() -> ExitCode {
     match run() {
@@ -13,10 +22,15 @@ fn main() -> ExitCode {
 }
 
 fn run() -> Result<(), ExpandError> {
-    for arg in std::env::args().skip(1) {
-        let path = Path::new(&arg);
-        let code = expand_from_path(path, true)?;
-        println!("{code}");
+    let args = Args::parse();
+    let mut text = String::new();
+    for file in &args.files {
+        text.push_str(&expand_from_path(file, true)?);
+    }
+    if args.clipboard {
+        arboard::Clipboard::new()?.set_text(text)?;
+    } else {
+        println!("{text}");
     }
     Ok(())
 }

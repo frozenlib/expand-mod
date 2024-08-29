@@ -9,3 +9,5 @@ quote = "1.0.37"
 proc-macro2 = { version = "1.0.86", features = ["span-locations"] }
 anyhow = "1.0.86"
 annotate-snippets = "0.11.4"
+clap = { version = "4.5.16", features = ["derive"] }
+arboard = "3.4.0"
