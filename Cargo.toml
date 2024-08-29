@@ -2,6 +2,10 @@
 name = "expand-mod"
 version = "0.1.0"
 edition = "2021"
+authors = ["frozenlib <frozenlib@users.noreply.github.com>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/frozenlib/expand-mod"
+description = "Expand `mod module_name;` in `.rs` files and combine the module tree consisting of multiple files into a single file."
 
 [dependencies]
 syn = { version = "2.0.76", features = ["full", "visit"] }
