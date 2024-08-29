@@ -105,7 +105,8 @@ fn path_from_mod(path: &Path, is_root: bool, m: &ItemMod) -> Result<PathBuf> {
         Some(p) => Ok(path.parent().unwrap().join(p)),
         None => {
             let name = m.ident.to_string();
-            let base = if is_root {
+            let file_name = path.file_name().unwrap();
+            let base = if is_root || file_name == "mod.rs" {
                 path.parent().unwrap().to_path_buf()
             } else {
                 path.with_extension("")
