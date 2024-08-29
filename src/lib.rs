@@ -124,12 +124,11 @@ fn path_from_mod(path: &Path, is_root: bool, m: &ItemMod) -> Result<PathBuf> {
                 path.with_extension("")
             };
             let p0 = base.join(format!("{name}.rs"));
-            if p0.is_file() {
-                return Ok(p0);
-            }
             let p1 = base.join(format!("{name}/mod.rs"));
-            if p1.is_file() {
-                return Ok(p1);
+            for p in &[&p0, &p1] {
+                if p.is_file() {
+                    return Ok(p.to_path_buf());
+                }
             }
             Err(ExpandError::new(
                 Some(m.span()),
