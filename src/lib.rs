@@ -8,7 +8,6 @@ use std::{
 
 use annotate_snippets::{Level, Renderer, Snippet};
 use anyhow::anyhow;
-use ariadne::{ColorGenerator, Label, Report, ReportKind};
 use proc_macro2::{Span, TokenStream};
 use syn::{
     parse2, spanned::Spanned, visit::Visit, Attribute, Expr, ExprLit, File, ItemMod, Lit, Meta,
@@ -46,20 +45,6 @@ impl ExpandError {
         }
         let renderer = Renderer::styled();
         eprintln!("{}", renderer.render(m));
-    }
-
-    pub fn show_with_ariadne(&self) {
-        let mut colors = ColorGenerator::new();
-        let color = colors.next();
-        if let (Some(source), Some(span)) = (&self.source, self.span.clone()) {
-            let path = source.path.to_string_lossy();
-            Report::build(ReportKind::Error, &path, span.start)
-                .with_message(&self.e)
-                .with_label(Label::new((&path, span.clone())).with_color(color))
-                .finish()
-                .eprint((&path, ariadne::Source::from(&source.text)))
-                .unwrap();
-        }
     }
 }
 

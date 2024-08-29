@@ -8,6 +8,4 @@ syn = { version = "2.0.76", features = ["full", "visit"] }
 quote = "1.0.37"
 proc-macro2 = { version = "1.0.86", features = ["span-locations"] }
 anyhow = "1.0.86"
-# prettyplease = "0.2.22"
 annotate-snippets = "0.11.4"
-ariadne = "0.4.1"
