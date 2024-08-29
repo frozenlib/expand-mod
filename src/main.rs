@@ -3,8 +3,10 @@ use std::{path::PathBuf, process::ExitCode};
 use clap::Parser;
 use expand_mod::{expand_from_path, ExpandError};
 
+/// Expand `mod module_name;` in `.rs` files and combine the module tree consisting of multiple files into a single file.
 #[derive(clap::Parser)]
 struct Args {
+    /// Copy the result to the clipboard instead of stdout.
     #[clap(long)]
     clipboard: bool,
 
