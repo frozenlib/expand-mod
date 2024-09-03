@@ -85,7 +85,7 @@ pub fn expand_from_path(root: &Path, path: &Path, is_root: bool) -> Result<Strin
 fn expand_from_text(root: &Path, path: &Path, is_root: bool, s: &str) -> Result<String> {
     let tokens = parse_token_stream(s)?;
     let file: File = parse2(tokens)?;
-    let mut b = CodeBuilder::new();
+    let mut b = PartsBuilder::new();
     b.visit_file(&file);
     let mut text = String::new();
     for part in b.finish(s.len()) {
@@ -169,11 +169,11 @@ enum Part {
     Mod(ItemMod),
 }
 
-struct CodeBuilder {
+struct PartsBuilder {
     offset: usize,
     parts: Vec<Part>,
 }
-impl CodeBuilder {
+impl PartsBuilder {
     fn new() -> Self {
         Self {
             offset: 0,
@@ -186,7 +186,7 @@ impl CodeBuilder {
         parts
     }
 }
-impl<'ast> Visit<'ast> for CodeBuilder {
+impl<'ast> Visit<'ast> for PartsBuilder {
     fn visit_item_mod(&mut self, i: &'ast ItemMod) {
         if i.content.is_some() {
             return;
